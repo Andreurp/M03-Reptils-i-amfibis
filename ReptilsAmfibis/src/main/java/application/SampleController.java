@@ -75,12 +75,10 @@ public class SampleController implements Initializable {
 			//select a la taula familia
 			ResultSet resultat = consulta.executeQuery("SELECT * FROM families");
 			//omplir el cbFamilia amb els valors de la bdd
-			String defecte = "";
+			cbFamilia.setValue("Tria una familia");
 			while(resultat.next()){
-				cbFamilia.getItems().addAll(resultat.getString("nom"));
-				defecte = resultat.getString("nom");
+				cbFamilia.getItems().addAll(resultat.getString("nom"));	
 			}
-			cbFamilia.setValue(defecte);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,14 +89,18 @@ public class SampleController implements Initializable {
 	@FXML
 	public void carregaOrdres(ActionEvent event) {
 		if(obreBDD()){
+			cbOrdre.getItems().clear();
 			int index=cbFamilia.getSelectionModel().getSelectedIndex()+1;
-			System.out.println(index);
 			//seleccionar els ordres que pertanyen a la familia
 			try {
 				consulta = con.createStatement();
-				ResultSet resultat = consulta.executeQuery("SELECT codi,nom FROM ordres WHERE familia="+index+"");
+				ResultSet resultat = consulta.executeQuery("SELECT nom FROM ordres WHERE familia="+index);
 				//posa-los al cbOrdres
 				
+				while(resultat.next()){
+					cbOrdre.getItems().addAll(resultat.getString("nom"));
+				}
+				cbOrdre.setValue("Tria un ordre de la familia");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
