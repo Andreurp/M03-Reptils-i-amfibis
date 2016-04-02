@@ -17,6 +17,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import org.w3c.dom.CDATASection;
+
 import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
@@ -49,6 +51,7 @@ public class SampleController implements Initializable {
 	private Connection con = null;
 	private ArrayList<Animal> llistaAnimals = new ArrayList<Animal>();
 	private Statement consulta;
+	private int posicioAnimal = 0;
 		
 	private boolean obreBDD(){
 		boolean obert =false;
@@ -69,20 +72,20 @@ public class SampleController implements Initializable {
 
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		//obrir base de dades
-		obreBDD();
-		try {
-			consulta = con.createStatement();
-			//select a la taula familia
-			ResultSet resultat = consulta.executeQuery("SELECT * FROM families");
-			//omplir el cbFamilia amb els valors de la bdd
-			cbFamilia.setValue("Tria una familia");
-			while(resultat.next()){
-				cbFamilia.getItems().addAll(resultat.getString("nom"));	
+		if(obreBDD()){
+			try {
+				consulta = con.createStatement();
+				//select a la taula familia
+				ResultSet resultat = consulta.executeQuery("SELECT * FROM families");
+				//omplir el cbFamilia amb els valors de la bdd
+				cbFamilia.setValue("Tria una familia");
+				while(resultat.next()){
+					cbFamilia.getItems().addAll(resultat.getString("nom"));	
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			con.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
@@ -101,7 +104,6 @@ public class SampleController implements Initializable {
 				while(resultat.next()){
 					cbOrdre.getItems().addAll(resultat.getString("nom"));
 				}
-				con.close();
 				cbOrdre.setValue("Tria un ordre de la familia");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -112,9 +114,38 @@ public class SampleController implements Initializable {
 	// Event Listener on ComboBox[#cbOrdre].onAction
 	@FXML
 	public void carregaAnimals(ActionEvent event) {
-		//Fer un select de tots els animals de l'ordre seleccionat
-		//posar-los a la llistaAnimals
-		//mostrar el primer (omplir tots els camps)
+		if(obreBDD()){
+			txtNom.setText(" ");
+			txtEspecia.setText(" ");
+			cbEstat.getItems().clear();
+			txaDescripcio.setText(" ");
+			
+			int index=cbOrdre.getSelectionModel().getSelectedIndex()+1;
+			//Fer un select de tots els animals de l'ordre seleccionat
+			try {
+				consulta = con.createStatement();
+				ResultSet resultat = consulta.executeQuery("SELECT * FROM animals WHERE ordre"+index);
+				llistaAnimals.clear();
+				while(resultat.next()){
+					//posar-los a la llistaAnimals
+					Animal animal = new Animal(resultat.getInt("codi"),resultat.getInt("ordre"),resultat.getString("nom"),resultat.getString("especie"),resultat.getString("descripcio"),resultat.getString("estat"),resultat.getString("imatge"));
+		            llistaAnimals.add(animal);
+				}
+				con.close();
+				//mostrar el primer (omplir tots els camps)
+				txtNom.setText(llistaAnimals.get(posicioAnimal).getNom());
+		        /*textdescripcio.setText(animales.get(numposicio).getDescripcio());
+		        textdescripcio.setWrapText(true);
+		        textespecie.setText(animales.get(numposicio).getEspecie());
+		        String url = animales.get(numposicio).getImatge();
+		        Image img= new Image(url);
+		        imagen.setImage(img);*/
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	@FXML
