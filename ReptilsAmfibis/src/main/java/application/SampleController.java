@@ -79,6 +79,7 @@ public class SampleController implements Initializable {
 			while(resultat.next()){
 				cbFamilia.getItems().addAll(resultat.getString("nom"));	
 			}
+			con.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -100,6 +101,7 @@ public class SampleController implements Initializable {
 				while(resultat.next()){
 					cbOrdre.getItems().addAll(resultat.getString("nom"));
 				}
+				con.close();
 				cbOrdre.setValue("Tria un ordre de la familia");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
