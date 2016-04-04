@@ -22,6 +22,7 @@ import org.w3c.dom.CDATASection;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.InputMethodEvent;
@@ -126,10 +127,15 @@ public class SampleController implements Initializable {
 			}
 			//mostrar el primer (omplir tots els camps)
 			txtNom.setText(llistaAnimals.get(posicioAnimal).getNom());
-	        /*textdescripcio.setText(animales.get(numposicio).getDescripcio());
-	        textdescripcio.setWrapText(true);
-	        textespecie.setText(animales.get(numposicio).getEspecie());
-	        String url = animales.get(numposicio).getImatge();
+			txtEspecia.setText(llistaAnimals.get(posicioAnimal).getEspecie());
+	        txaDescripcio.setText(llistaAnimals.get(posicioAnimal).getDescripcio());
+	        String url = llistaAnimals.get(posicioAnimal).getImatge();
+	        Image img= new Image(url);
+	        imgAnimal.setImage(img);
+	        
+	        //textdescripcio.setWrapText(true);
+	        /*textespecie.setText(llistaAnimals.get(posicioAnimal).getEspecie());
+	        String url = animales.get(posicioAnimal).getImatge();
 	        Image img= new Image(url);
 	        imagen.setImage(img);*/
 			
