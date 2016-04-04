@@ -129,16 +129,14 @@ public class SampleController implements Initializable {
 			txtNom.setText(llistaAnimals.get(posicioAnimal).getNom());
 			txtEspecia.setText(llistaAnimals.get(posicioAnimal).getEspecie());
 	        txaDescripcio.setText(llistaAnimals.get(posicioAnimal).getDescripcio());
+	        
 	        String url = llistaAnimals.get(posicioAnimal).getImatge();
-	        Image img= new Image(url);
+	        String uri1 = url.substring(0,8);
+	        String uri2 = url.substring(10);
+	        String urlfinal = uri1+uri2;
+	        Image img= new Image(urlfinal);
 	        imgAnimal.setImage(img);
 	        
-	        //textdescripcio.setWrapText(true);
-	        /*textespecie.setText(llistaAnimals.get(posicioAnimal).getEspecie());
-	        String url = animales.get(posicioAnimal).getImatge();
-	        Image img= new Image(url);
-	        imagen.setImage(img);*/
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
