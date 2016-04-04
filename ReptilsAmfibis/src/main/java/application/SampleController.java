@@ -53,12 +53,10 @@ public class SampleController implements Initializable {
 	private Statement consulta;
 	private int posicioAnimal = 0;
 		
-	private boolean obreBDD(){
+	/*private boolean obreBDD(){
 		boolean obert =false;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			
-			//con = DriverManager.getConnection("jdbc:mysql://192.168.4.1/traductor", "foot", "ball");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/reptils", "foot", "ball");
 			obert=true;
 			
@@ -68,86 +66,77 @@ public class SampleController implements Initializable {
 		}
 		
 		return obert;
-	}
+	}*/
 
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		//obrir base de dades
-		if(obreBDD()){
-			try {
-				consulta = con.createStatement();
-				//select a la taula familia
-				ResultSet resultat = consulta.executeQuery("SELECT * FROM families");
-				//omplir el cbFamilia amb els valors de la bdd
-				cbFamilia.setValue("Tria una familia");
-				while(resultat.next()){
-					cbFamilia.getItems().addAll(resultat.getString("nom"));	
-				}
-				con.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/reptils", "foot", "ball");
+			
+			consulta = con.createStatement();
+			//select a la taula familia
+			ResultSet resultat = consulta.executeQuery("SELECT * FROM families");
+			//omplir el cbFamilia amb els valors de la bdd
+			cbFamilia.setValue("Tria una familia");
+			while(resultat.next()){
+				cbFamilia.getItems().addAll(resultat.getString("nom"));	
 			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
 	// Event Listener on ComboBox[#cbFamilia].onAction
 	@FXML
 	public void carregaOrdres(ActionEvent event) {
-		if(obreBDD()){
-			cbOrdre.getItems().clear();
-			int index=cbFamilia.getSelectionModel().getSelectedIndex()+1;
-			//seleccionar els ordres que pertanyen a la familia
-			try {
-				consulta = con.createStatement();
-				ResultSet resultat = consulta.executeQuery("SELECT nom FROM ordres WHERE familia="+index);
-				//posa-los al cbOrdres
-				
-				while(resultat.next()){
-					cbOrdre.getItems().addAll(resultat.getString("nom"));
-				}
-				con.close();
-				cbOrdre.setValue("Tria un ordre de la familia");
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
-		}
+		cbOrdre.getItems().clear();
+		String familia=cbFamilia.getValue().toString();
+		//seleccionar els ordres que pertanyen a la familia
+		try {
+			ResultSet resultat = consulta.executeQuery("SELECT codi, nom FROM ordres WHERE familia = (SELECT codi FROM families WHERE nom = '" + familia + "')");
+			//posa-los al cbOrdres
+			while(resultat.next()){
+				cbOrdre.getItems().addAll(resultat.getString("nom"));
+			}
+			cbOrdre.setValue("Tria un ordre de la familia");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}			
 	}
 	// Event Listener on ComboBox[#cbOrdre].onAction
 	@FXML
 	public void carregaAnimals(ActionEvent event) {
-		if(obreBDD()){
-			txtNom.setText(" ");
-			txtEspecia.setText(" ");
-			cbEstat.getItems().clear();
-			txaDescripcio.setText(" ");
-			
-			int index=cbOrdre.getSelectionModel().getSelectedIndex()+1;
-			//Fer un select de tots els animals de l'ordre seleccionat
-			try {
-				consulta = con.createStatement();
-				ResultSet resultat = consulta.executeQuery("SELECT * FROM animals WHERE ordre"+index);
-				llistaAnimals.clear();
-				while(resultat.next()){
-					//posar-los a la llistaAnimals
-					Animal animal = new Animal(resultat.getInt("codi"),resultat.getInt("ordre"),resultat.getString("nom"),resultat.getString("especie"),resultat.getString("descripcio"),resultat.getString("estat"),resultat.getString("imatge"));
-		            llistaAnimals.add(animal);
-				}
-				con.close();
-				//mostrar el primer (omplir tots els camps)
-				txtNom.setText(llistaAnimals.get(posicioAnimal).getNom());
-		        /*textdescripcio.setText(animales.get(numposicio).getDescripcio());
-		        textdescripcio.setWrapText(true);
-		        textespecie.setText(animales.get(numposicio).getEspecie());
-		        String url = animales.get(numposicio).getImatge();
-		        Image img= new Image(url);
-		        imagen.setImage(img);*/
-				
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		/*txtNom.setText(" ");
+		txtEspecia.setText(" ");
+		cbEstat.getItems().clear();
+		txaDescripcio.setText(" ");
+		
+		int index=cbOrdre.getSelectionModel().getSelectedIndex()+1;
+		//Fer un select de tots els animals de l'ordre seleccionat
+		try {
+			ResultSet resultat = consulta.executeQuery("SELECT * FROM animals WHERE ordre"+index);
+			llistaAnimals.clear();
+			while(resultat.next()){
+				//posar-los a la llistaAnimals
+				Animal animal = new Animal(resultat.getInt("codi"),resultat.getInt("ordre"),resultat.getString("nom"),resultat.getString("especie"),resultat.getString("descripcio"),resultat.getString("estat"),resultat.getString("imatge"));
+	            llistaAnimals.add(animal);
 			}
-		}
+			//mostrar el primer (omplir tots els camps)
+			txtNom.setText(llistaAnimals.get(posicioAnimal).getNom());
+	        /*textdescripcio.setText(animales.get(numposicio).getDescripcio());
+	        textdescripcio.setWrapText(true);
+	        textespecie.setText(animales.get(numposicio).getEspecie());
+	        String url = animales.get(numposicio).getImatge();
+	        Image img= new Image(url);
+	        imagen.setImage(img);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 	}
 	
 	@FXML
