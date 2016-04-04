@@ -95,7 +95,7 @@ public class SampleController implements Initializable {
 		String familia=cbFamilia.getValue().toString();
 		//seleccionar els ordres que pertanyen a la familia
 		try {
-			ResultSet resultat = consulta.executeQuery("SELECT codi, nom FROM ordres WHERE familia = (SELECT codi FROM families WHERE nom = '" + familia + "')");
+			ResultSet resultat = consulta.executeQuery("SELECT nom FROM ordres WHERE familia = (SELECT codi FROM families WHERE nom = '" + familia + "')");
 			//posa-los al cbOrdres
 			while(resultat.next()){
 				cbOrdre.getItems().addAll(resultat.getString("nom"));
@@ -109,15 +109,15 @@ public class SampleController implements Initializable {
 	// Event Listener on ComboBox[#cbOrdre].onAction
 	@FXML
 	public void carregaAnimals(ActionEvent event) {
-		/*txtNom.setText(" ");
+		txtNom.setText(" ");
 		txtEspecia.setText(" ");
 		cbEstat.getItems().clear();
 		txaDescripcio.setText(" ");
 		
-		int index=cbOrdre.getSelectionModel().getSelectedIndex()+1;
+		String ordre=cbOrdre.getValue().toString();
 		//Fer un select de tots els animals de l'ordre seleccionat
 		try {
-			ResultSet resultat = consulta.executeQuery("SELECT * FROM animals WHERE ordre"+index);
+			ResultSet resultat = consulta.executeQuery("SELECT * FROM animals WHERE ordre = (SELECT codi from ordres WHERE nom = '" + ordre + "')");
 			llistaAnimals.clear();
 			while(resultat.next()){
 				//posar-los a la llistaAnimals
@@ -131,12 +131,12 @@ public class SampleController implements Initializable {
 	        textespecie.setText(animales.get(numposicio).getEspecie());
 	        String url = animales.get(numposicio).getImatge();
 	        Image img= new Image(url);
-	        imagen.setImage(img);
+	        imagen.setImage(img);*/
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
 	@FXML
