@@ -13,7 +13,7 @@
    <bottom>
       <Pane prefHeight="468.0" prefWidth="605.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="imgAnimal" fitHeight="147.0" fitWidth="138.0" layoutX="64.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imgAnimal" fitHeight="147.0" fitWidth="245.0" layoutX="22.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true" />
             <Label layoutX="289.0" layoutY="43.0" text="Familia" />
             <ComboBox fx:id="cbFamilia" layoutX="351.0" layoutY="39.0" onAction="#carregaOrdres" prefHeight="25.0" prefWidth="204.0" />
             <Label layoutX="289.0" layoutY="93.0" text="Ordre" />

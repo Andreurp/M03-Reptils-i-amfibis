@@ -19,6 +19,10 @@ public class Animal {
 		this.descripcio = descripcio;
 		this.imatge = imatge;
 	}
+	
+	public Animal(){
+		
+	}
 
 	public int getCodi() {
 		return codi;
