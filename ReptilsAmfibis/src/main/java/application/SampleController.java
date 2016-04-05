@@ -204,6 +204,7 @@ public class SampleController implements Initializable {
 	public void animalAnterior(MouseEvent event) {
 		posicioAnimal--;
 		ompleAnimal();
+		btnDesa.setDisable(true);
 	}
 
 	// Event Listener on Button[#btnSeguent].onMouseClicked
@@ -211,5 +212,6 @@ public class SampleController implements Initializable {
 	public void animalSeguent(MouseEvent event) {
 		posicioAnimal++;
 		ompleAnimal();
+		btnDesa.setDisable(true);
 	}
 }
