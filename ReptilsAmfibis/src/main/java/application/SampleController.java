@@ -17,8 +17,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import org.w3c.dom.CDATASection;
-
 import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
@@ -53,21 +51,6 @@ public class SampleController implements Initializable {
 	private ArrayList<Animal> llistaAnimals = new ArrayList<Animal>();
 	private Statement consulta;
 	private int posicioAnimal = 0;
-		
-	/*private boolean obreBDD(){
-		boolean obert =false;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/reptils", "foot", "ball");
-			obert=true;
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return obert;
-	}*/
 
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		//obrir base de dades
@@ -83,6 +66,16 @@ public class SampleController implements Initializable {
 			while(resultat.next()){
 				cbFamilia.getItems().addAll(resultat.getString("nom"));	
 			}
+			cbEstat.getItems().addAll(
+					"Extinta",
+					"Extinta en estat salvatge",
+					"En perill greu",
+					"En perill",
+					"Vulnerable",
+					"Depèn de la conservació",
+					"Gairebé amenaçada",
+					"Risc mínim",
+					"No avaluada");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -112,34 +105,40 @@ public class SampleController implements Initializable {
 	public void carregaAnimals(ActionEvent event) {
 		txtNom.setText(" ");
 		txtEspecia.setText(" ");
-		cbEstat.getItems().clear();
+		cbEstat.setValue(" ");
 		txaDescripcio.setText(" ");
-		
-		String ordre=cbOrdre.getValue().toString();
-		//Fer un select de tots els animals de l'ordre seleccionat
-		try {
-			ResultSet resultat = consulta.executeQuery("SELECT * FROM animals WHERE ordre = (SELECT codi from ordres WHERE nom = '" + ordre + "')");
-			llistaAnimals.clear();
-			while(resultat.next()){
-				//posar-los a la llistaAnimals
-				Animal animal = new Animal(resultat.getInt("codi"),resultat.getInt("ordre"),resultat.getString("nom"),resultat.getString("especie"),resultat.getString("descripcio"),resultat.getString("estat"),resultat.getString("imatge"));
-	            llistaAnimals.add(animal);
+		imgAnimal.setImage(null);
+	
+		if(cbOrdre.getItems().size()>0 && !cbOrdre.getValue().equals("Tria un ordre de la familia")){
+			String ordre=cbOrdre.getValue().toString();
+			//Fer un select de tots els animals de l'ordre seleccionat
+			try {
+				ResultSet resultat = consulta.executeQuery("SELECT * FROM animals WHERE ordre = (SELECT codi from ordres WHERE nom = '" + ordre + "')");
+				llistaAnimals.clear();
+				while(resultat.next()){
+					//posar-los a la llistaAnimals
+					Animal animal = new Animal(resultat.getInt("codi"),resultat.getInt("ordre"),resultat.getString("nom"),resultat.getString("especie"),resultat.getString("estat"),resultat.getString("descripcio"),resultat.getString("imatge"));
+		            llistaAnimals.add(animal);
+				}
+				if(llistaAnimals.size()>0){
+					//mostrar el primer (omplir tots els camps)
+					txtNom.setText(llistaAnimals.get(posicioAnimal).getNom());
+					txtEspecia.setText(llistaAnimals.get(posicioAnimal).getEspecie());
+			        txaDescripcio.setText(llistaAnimals.get(posicioAnimal).getDescripcio());
+			        
+			        String url = llistaAnimals.get(posicioAnimal).getImatge();
+			        String uri1 = url.substring(0,8);
+			        String uri2 = url.substring(10);
+			        String urlfinal = uri1+uri2;
+			        Image img= new Image(urlfinal);
+			        imgAnimal.setImage(img);
+			        
+			        cbEstat.setValue(llistaAnimals.get(posicioAnimal).getEstat());
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			//mostrar el primer (omplir tots els camps)
-			txtNom.setText(llistaAnimals.get(posicioAnimal).getNom());
-			txtEspecia.setText(llistaAnimals.get(posicioAnimal).getEspecie());
-	        txaDescripcio.setText(llistaAnimals.get(posicioAnimal).getDescripcio());
-	        
-	        String url = llistaAnimals.get(posicioAnimal).getImatge();
-	        String uri1 = url.substring(0,8);
-	        String uri2 = url.substring(10);
-	        String urlfinal = uri1+uri2;
-	        Image img= new Image(urlfinal);
-	        imgAnimal.setImage(img);
-	        
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
