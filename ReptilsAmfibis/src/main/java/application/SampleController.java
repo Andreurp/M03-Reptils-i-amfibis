@@ -154,9 +154,8 @@ public class SampleController implements Initializable {
 	// Event Listener on ComboBox[#cbEstat].onAction
 	@FXML
 	public void habilitaDesa(ActionEvent event) {
-
-		// System.out.println("hola");
 		btnDesa.setDisable(false);
+		
 	}
 
 	// Event Listener on TextField[#txtEspecia].onKeyPressed
